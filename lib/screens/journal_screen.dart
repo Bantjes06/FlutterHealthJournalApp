@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mental_health/widgets/emoticon_slider.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
@@ -16,7 +17,7 @@ class _JournalScreenState extends State<JournalScreen> {
         centerTitle: true,
       ),
       body: const Center(
-        child: Text('Journal here'),
+        child: EmoticonSlider(),
       ),
     );
   }
