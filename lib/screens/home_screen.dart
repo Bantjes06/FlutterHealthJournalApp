@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              Container(height: 500, width: 500, child: const Center(child: Text('Mood chart will be displayed here, placeholder only'))),
+              Container(height: 580, width: 500, child: const Center(child: Text('Mood chart will be displayed here, placeholder only'))),
               const SizedBox(
                 height: 25,
               ),
