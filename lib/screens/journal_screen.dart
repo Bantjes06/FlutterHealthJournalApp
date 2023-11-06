@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mental_health/widgets/emoticon_slider.dart';
 import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
@@ -10,8 +12,30 @@ class JournalScreen extends StatefulWidget {
 }
 
 class _JournalScreenState extends State<JournalScreen> {
+  final _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   DateTime? _selectedDate;
+  int _sliderValue = 2;
+  String? _journalEntry;
+  late User loggedInUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = _auth.currentUser;
+      if(user != null){
+        loggedInUser = user;
+      }
+    } catch (e){
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +56,14 @@ class _JournalScreenState extends State<JournalScreen> {
           const SizedBox(
             height: 25,
           ),
-          const EmoticonSlider(),
+          EmoticonSlider(
+            sliderValue: _sliderValue,
+            onEmoticonChanged: (newSliderValue) {
+              setState(() {
+                _sliderValue = newSliderValue;
+              });
+            },
+          ),
           const SizedBox(
             height: 40,
           ),
@@ -51,7 +82,7 @@ class _JournalScreenState extends State<JournalScreen> {
                 context: context,
                 initialDate: DateTime.now(),
                 firstDate: DateTime(2000),
-                lastDate: DateTime(2101),
+                lastDate: DateTime.now(),
               );
               if (pickedDate != null && pickedDate != DateTime.now()) {
                 setState(() {
@@ -92,14 +123,29 @@ class _JournalScreenState extends State<JournalScreen> {
                             }
                             return null;
                           },
-                          onSaved: (value) {},
+                          onSaved: (value) {
+                            _journalEntry = value;
+                          },
                         ),
                       ),
                       const SizedBox(
                         height: 50,
                       ),
                       ElevatedButton(
-                          onPressed: () {}, child: const Text('Save Entry'))
+                          onPressed: () async {
+                            if(_formKey.currentState!.validate()){
+                              _formKey.currentState!.save();
+                            }
+                            _firestore.collection('entries').add({
+                              'entryDate': _selectedDate,
+                              'sliderValue': _sliderValue,
+                              'entry': _journalEntry,
+                              'createdAt': DateTime.now(),
+                              'sender': loggedInUser.email
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Save Entry'))
                     ],
                   ),
                 ),
