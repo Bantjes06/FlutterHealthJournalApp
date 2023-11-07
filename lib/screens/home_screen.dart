@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mental_health/screens/journal_screen.dart';
+import 'package:mental_health/widgets/drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,6 +11,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Journal'),
+        
         centerTitle: true,
         actions: [
           IconButton(
@@ -19,6 +21,7 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(Icons.exit_to_app))
         ],
       ),
+      drawer: const MainDrawer(),
       body: Padding(
         padding: const EdgeInsets.only(top: 20),
         child: Center(
