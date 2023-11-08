@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:mental_health/screens/detail_screen.dart';
 
 class MainDrawer extends StatefulWidget {
   const MainDrawer({super.key});
@@ -18,10 +19,10 @@ class _MainDrawerState extends State<MainDrawer> {
   @override
   void initState() {
     super.initState();
-    getCurrentUser();
+    _getCurrentUser();
   }
 
-  void getCurrentUser() async {
+  void _getCurrentUser() async {
     try {
       final user = _auth.currentUser;
       if (user != null) {
@@ -29,6 +30,27 @@ class _MainDrawerState extends State<MainDrawer> {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  void _deleteEntry(String docId) async {
+    await _firestore.collection('entries').doc(docId).delete();
+  }
+
+  _getSliderEmoticon(sliderEntryValue) {
+    switch (sliderEntryValue) {
+      case 0:
+        return const Icon(Icons.sentiment_very_dissatisfied);
+      case 1:
+        return const Icon(Icons.sentiment_dissatisfied);
+      case 2:
+        return const Icon(Icons.sentiment_neutral);
+      case 3:
+        return const Icon(Icons.sentiment_satisfied);
+      case 4:
+        return const Icon(Icons.sentiment_very_satisfied);
+      default:
+        return const Icon(Icons.error);
     }
   }
 
@@ -58,7 +80,7 @@ class _MainDrawerState extends State<MainDrawer> {
           StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('entries')
-                .where('sender', isEqualTo: loggedInUser.email)
+                .where('userId', isEqualTo: loggedInUser.uid)
                 .orderBy('createdAt', descending: true)
                 .snapshots(),
             builder: (cxt, snapshot) {
@@ -80,6 +102,7 @@ class _MainDrawerState extends State<MainDrawer> {
                 );
               }
               return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   ListView.builder(
                     scrollDirection: Axis.vertical,
@@ -87,12 +110,32 @@ class _MainDrawerState extends State<MainDrawer> {
                     itemCount: entries.length,
                     itemBuilder: (context, index) {
                       var entry = entries[index].data() as Map<String, dynamic>;
+                      var entryId = entries[index].id;
                       var entryDate = entry['entryDate']?.toDate();
                       var entryText = entry['entry'];
+                      var entrySliderValue = entry['sliderValue'];
 
                       return ListTile(
                         title: Text(DateFormat('yMMMd').format(entryDate)),
-                        subtitle: Text(entryText),
+                        subtitle: Text(
+                          entryText,
+                          maxLines: 2,
+                        ),
+                        leading: _getSliderEmoticon(entrySliderValue),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            _deleteEntry(entryId);
+                          },
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EntryDetailScreen(entryData: entry),
+                            ),
+                          );
+                        },
                       );
                     },
                   ),

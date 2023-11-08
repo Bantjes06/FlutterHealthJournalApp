@@ -141,8 +141,9 @@ class _JournalScreenState extends State<JournalScreen> {
                               'sliderValue': _sliderValue,
                               'entry': _journalEntry,
                               'createdAt': DateTime.now(),
-                              'sender': loggedInUser.email
+                              'userId': loggedInUser.uid
                             });
+                            FocusScope.of(context).unfocus();
                             Navigator.pop(context);
                           },
                           child: const Text('Save Entry'))
