@@ -40,17 +40,17 @@ class _MainDrawerState extends State<MainDrawer> {
   _getSliderEmoticon(sliderEntryValue) {
     switch (sliderEntryValue) {
       case 0:
-        return const Icon(Icons.sentiment_very_dissatisfied);
+        return const Icon(Icons.sentiment_very_dissatisfied, size: 48,);
       case 1:
-        return const Icon(Icons.sentiment_dissatisfied);
+        return const Icon(Icons.sentiment_dissatisfied, size: 48,);
       case 2:
-        return const Icon(Icons.sentiment_neutral);
+        return const Icon(Icons.sentiment_neutral, size: 48,);
       case 3:
-        return const Icon(Icons.sentiment_satisfied);
+        return const Icon(Icons.sentiment_satisfied, size: 48,);
       case 4:
-        return const Icon(Icons.sentiment_very_satisfied);
+        return const Icon(Icons.sentiment_very_satisfied, size: 48,);
       default:
-        return const Icon(Icons.error);
+        return const Icon(Icons.error, size: 36,);
     }
   }
 
@@ -132,7 +132,7 @@ class _MainDrawerState extends State<MainDrawer> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) =>
-                                  EntryDetailScreen(entryData: entry),
+                                  EntryDetailScreen(entryData: entry, onValueToEmoticon: _getSliderEmoticon),
                             ),
                           );
                         },
