@@ -90,7 +90,6 @@ class _ChartState extends State<Chart> {
           ),
         ),
       ),
-      // Other BarChartData properties...
     );
   }
 

@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData().copyWith(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 255, 255)),
+
         useMaterial3: true,
       ),
       home: StreamBuilder(

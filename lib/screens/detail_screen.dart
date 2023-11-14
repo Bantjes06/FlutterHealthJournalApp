@@ -20,7 +20,7 @@ class EntryDetailScreen extends StatelessWidget {
           const SizedBox(height: 50,),
           Center(child: onValueToEmoticon(emoteValue),),
           const SizedBox(height: 80,),
-          Text(entryText)
+          Padding(padding: const EdgeInsets.only(left: 5, right: 5), child: Text(entryText))
         ],
       )
       
