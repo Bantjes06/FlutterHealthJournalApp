@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mental_health/screens/journal_screen.dart';
+import 'package:mental_health/widgets/chart.dart';
 import 'package:mental_health/widgets/drawer.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -26,17 +27,19 @@ class HomeScreen extends StatelessWidget {
         padding: const EdgeInsets.only(top: 20),
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(height: 580, width: 500, child: const Center(child: Text('Mood chart will be displayed here, placeholder only'))),
+              const Text('Mood Stats', style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold
+              ),),
+              Container(height: 500, child: const Chart()),
               const SizedBox(
                 height: 25,
               ),
               const Text(
                 'How are you feeling today?',
                 style: TextStyle(fontSize: 25),
-              ),
-              const SizedBox(
-                height: 25,
               ),
               ElevatedButton(
                   onPressed: () {
